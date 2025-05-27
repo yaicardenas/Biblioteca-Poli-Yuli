@@ -2,15 +2,25 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Biblioteca</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Biblioteca</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Estilos personalizados (si tienes) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
 </head>
 <body>
-    <div class="container mt-4">
-        <h1 class="text-center mb-4">Sistema de Biblioteca</h1>
-        {% block contenido %}{% endblock %}
-    </div>
+<div class="container">
+    {% block contenido %}
+    {% endblock %}
+</div>
+
+<!-- Bootstrap JS (opcional si usas componentes interactivos) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-
