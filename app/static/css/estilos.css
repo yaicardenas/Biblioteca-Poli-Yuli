@@ -1,3 +1,71 @@
+/* Fondo general y tipografía */
 body {
-    background-color: #f8f9fa;
+    background-color: #f8f9fa; /* Gris claro de Bootstrap */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Encabezados principales */
+h1, h2, h3, h4 {
+    font-weight: 600;
+    color: #0d6efd; /* Azul Bootstrap */
+}
+
+/* Botones personalizados */
+.btn-success {
+    background-color: #198754;
+    border: none;
+}
+
+.btn-success:hover {
+    background-color: #157347;
+}
+
+.btn-outline-success {
+    border-color: #198754;
+    color: #198754;
+}
+
+.btn-outline-success:hover {
+    background-color: #198754;
+    color: white;
+}
+
+/* Tarjetas */
+.card {
+    border-radius: 1rem;
+}
+
+.card-header {
+    font-size: 1.2rem;
+}
+
+/* Tabla */
+.table th, .table td {
+    vertical-align: middle;
+    font-size: 0.95rem;
+}
+
+.table th {
+    background-color: #e9f2fd;
+    color: #0d6efd;
+}
+
+/* Inputs */
+input.form-control {
+    border-radius: 0.5rem;
+}
+
+/* Formulario */
+form label {
+    font-weight: 500;
+    color: #495057;
+}
+
+/* Pie de página o margen final opcional */
+footer {
+    margin-top: 3rem;
+    padding: 1rem;
+    text-align: center;
+    color: #6c757d;
+    font-size: 0.85rem;
 }

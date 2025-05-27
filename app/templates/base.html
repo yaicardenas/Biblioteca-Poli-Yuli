@@ -11,16 +11,32 @@
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- Estilos personalizados (si tienes) -->
+    <!-- Estilos personalizados -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
 </head>
 <body>
-<div class="container">
-    {% block contenido %}
-    {% endblock %}
-</div>
 
-<!-- Bootstrap JS (opcional si usas componentes interactivos) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Encabezado opcional -->
+    <header class="py-4 bg-primary text-white text-center mb-4 shadow">
+        <div class="container">
+            <h1 class="h3 mb-0">📚 Mi Biblioteca</h1>
+        </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="container mb-5">
+        {% block contenido %}
+        {% endblock %}
+    </main>
+
+    <!-- Pie de página opcional -->
+    <footer class="bg-light text-center py-3 text-muted border-top small">
+        <div class="container">
+            Proyecto educativo • Flask + MySQL • 2025
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

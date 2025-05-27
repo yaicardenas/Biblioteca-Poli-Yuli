@@ -1,39 +1,43 @@
 {% extends 'base.html' %}
 {% block contenido %}
 <div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2><i class="bi bi-journal-bookmark-fill text-primary"></i> Biblioteca</h2>
-        <a href="/agregar" class="btn btn-success">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">
+            <i class="bi bi-journal-bookmark-fill"></i> Biblioteca
+        </h2>
+        <a href="/agregar" class="btn btn-outline-success shadow-sm">
             <i class="bi bi-plus-circle"></i> Agregar Libro
         </a>
     </div>
 
-    <div class="card shadow border-0 rounded-4">
-        <div class="card-body">
-            <table class="table table-hover align-middle text-center">
-                <thead class="table-primary">
-                <tr>
-                    <th scope="col"><i class="bi bi-card-text"></i> Título</th>
-                    <th scope="col"><i class="bi bi-person"></i> Autor</th>
-                    <th scope="col"><i class="bi bi-tags"></i> Categoría</th>
-                    <th scope="col"><i class="bi bi-123"></i> Cantidad</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for libro in libros %}
-                <tr>
-                    <td>{{ libro[1] }}</td>
-                    <td>{{ libro[2] }}</td>
-                    <td>{{ libro[3] }}</td>
-                    <td>{{ libro[4] }}</td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td colspan="4" class="text-muted">No hay libros registrados.</td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+    <div class="card shadow-sm border-0 rounded-4 bg-light">
+        <div class="card-body p-4">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle text-center">
+                    <thead class="table-primary">
+                        <tr>
+                            <th><i class="bi bi-card-text"></i> Título</th>
+                            <th><i class="bi bi-person"></i> Autor</th>
+                            <th><i class="bi bi-tags"></i> Categoría</th>
+                            <th><i class="bi bi-123"></i> Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for libro in libros %}
+                        <tr>
+                            <td>{{ libro[1] }}</td>
+                            <td>{{ libro[2] }}</td>
+                            <td>{{ libro[3] }}</td>
+                            <td>{{ libro[4] }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-muted fst-italic">No hay libros registrados.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

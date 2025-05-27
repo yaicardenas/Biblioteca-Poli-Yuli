@@ -17,7 +17,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: biblioteca
     ports:
-      - "5000:5000"
+      - "3306:3306"
     networks:
       - red-biblioteca
     volumes:
