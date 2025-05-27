@@ -1,27 +1,27 @@
 version: '3.8'
 
 services:
-  app:
-    build:
-      context: ./app
-    container_name: python-app
-    depends_on:
-      - db
-    networks:
-      - red-biblioteca
-
   db:
-    image: mysql:8.0
-    container_name: mysql-db
+    image: mysql:5.7
+    container_name: mysql_biblioteca
     environment:
-      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: biblioteca
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
     ports:
       - "3306:3306"
-    networks:
-      - red-biblioteca
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d  # 👈 aquí se monta el init.sql
 
-networks:
-  red-biblioteca:
+  web:
+    build: ./app
+    container_name: flask_biblioteca
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    environment:
+      FLASK_ENV: development
+
+volumes:
+  db_data:

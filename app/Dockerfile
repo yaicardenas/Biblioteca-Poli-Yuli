@@ -1,7 +1,12 @@
-FROM python:3.11-slim
+FROM python:3.10
 
 WORKDIR /app
 
-COPY main.py .
+COPY requirements.txt .
+RUN pip install -r requirements.txt
 
-CMD ["python", "main.py"]
+COPY . .
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]
