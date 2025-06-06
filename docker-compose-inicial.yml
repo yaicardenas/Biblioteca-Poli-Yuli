@@ -1,0 +1,27 @@
+services:
+  web:
+    build: ./app
+    container_name: flask-app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    networks:
+      - red-biblioteca
+
+  db:
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: biblioteca
+    ports:
+      - "3306:3306"
+    networks:
+      - red-biblioteca
+    volumes:
+      - ./mysql-init:/docker-entrypoint-initdb.d
+
+networks:
+  red-biblioteca:
