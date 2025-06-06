@@ -1,6 +1,7 @@
 pipeline {
     agent any
 
+    stages {
         stage('Preparar entorno limpio') {
             steps {
                 sh '''
