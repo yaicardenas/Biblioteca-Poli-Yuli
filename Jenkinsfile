@@ -14,7 +14,6 @@ pipeline {
                     echo 🔧 Eliminando red de pruebas si está vacía...
                     docker network rm pipeline_net || true
                     docker network rm pipeline-test_default || true
-                    docker network prune -f
 
                 '''
             }
@@ -23,6 +22,9 @@ pipeline {
         stage('Ejecutar pruebas unitarias') {
             steps {
                 sh '''
+                    echo "🧼 Limpiando redes antiguas..."
+                    docker network prune -f || true
+
                     echo "🔧 Levantando sólo el servicio web para pruebas..."
                     docker-compose -p pipeline-test up -d db
                     docker-compose -p pipeline-test up -d web
@@ -41,6 +43,7 @@ pipeline {
                 '''
             }
         }
+
 
         stage('Limpiar entorno Docker') {
             steps {
