@@ -27,10 +27,13 @@ pipeline {
                     sleep 5
 
                     echo "🧪 Ejecutando pruebas unitarias dentro del contenedor web..."
-                    docker-compose -p pipeline-test exec web python -m unittest discover -s test
+                    docker-compose -p pipeline-test exec -T web python -m unittest discover -s test
+                    status=$?                      # guarda el código de salida
 
                     echo "🧹 Apagando servicio web después de las pruebas..."
                     docker-compose -p pipeline-test down
+
+                    exit $status                   # propaga el resultado: si hay fallo, el stage marca FAILURE
                 '''
             }
         }
