@@ -46,7 +46,8 @@ services:
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
     networks:
-      - pipeline_net
+      - default
+
 
 volumes:
   jenkins_home:
