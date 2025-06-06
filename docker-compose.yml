@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   web:
     build: ./app
@@ -8,27 +6,24 @@ services:
       - "5000:5000"
     depends_on:
       - db
-    networks:
-      - red-biblioteca
 
   db:
     image: mysql:8.0
-    container_name: mysql-db
+    container_name: ${COMPOSE_PROJECT_NAME}_mysql-db
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: biblioteca
     ports:
       - "3306:3306"
-    networks:
-      - red-biblioteca
     volumes:
       - ./mysql-init:/docker-entrypoint-initdb.d
 
   jenkins:
+    build: ./jenkins
     image: jenkins/jenkins:lts
     container_name: jenkins-server
-    user: admin
+    user: root
     ports:
       - "8080:8080"
       - "50000:50000"
@@ -37,9 +32,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
-
-networks:
-  red-biblioteca:
 
 volumes:
   jenkins_home:
