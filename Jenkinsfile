@@ -35,6 +35,7 @@ pipeline {
 
                     echo "🧹 Apagando servicios después de las pruebas..."
                     docker-compose -p pipeline-test down
+                    
                 '''
             }
         }
@@ -48,6 +49,7 @@ pipeline {
             steps {
                 sh '''
                     echo "🚀 Desplegando contenedores..."
+                    docker rm -f jenkins-server flask-app || true
                     docker-compose -p pipeline-test up -d
                 '''
             }
