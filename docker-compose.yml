@@ -4,6 +4,9 @@ networks:
   pipeline_net:
     name: pipeline_net
     driver: bridge
+    enable_ipv6: false  # ← EXPLÍCITO Y CONSTANTE
+    ipam:
+      driver: default   # ← Recomendado para evitar conflictos
 
 services:
   web:
