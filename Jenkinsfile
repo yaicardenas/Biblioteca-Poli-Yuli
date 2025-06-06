@@ -11,18 +11,17 @@ pipeline {
                     echo 🗑 Eliminando contenedores anteriores...
                     docker rm flask-app mysql-db || true
 
-                    echo 🔧 Eliminando redes antiguas...
+                    echo 🔧 Eliminando redes antiguas específicas...
                     docker network rm pipeline_net || true
                     docker network rm pipeline-test_default || true
+                    docker network rm pipeline-test_pipeline_net || true  # <--- esta línea
 
                     echo 🔄 Prune de redes no usadas...
                     docker network prune -f || true
-
-                    echo 🔧 Eliminando red pipeline_net si existe...
-                    docker network inspect pipeline_net && docker network rm pipeline_net || true
                 '''
             }
         }
+
 
         stage('Ejecutar pruebas unitarias') {
             steps {

@@ -42,7 +42,6 @@ services:
     networks:
       - default
 
-
 volumes:
   jenkins_home:
 
