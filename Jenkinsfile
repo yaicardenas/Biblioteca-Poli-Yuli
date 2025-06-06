@@ -5,7 +5,7 @@ pipeline {
         stage('Limpiar entorno Docker') {
             steps {
                 sh '''
-                    echo "🛉 Deteniendo y limpiando contenedores anteriores..."
+                    echo "🏩 Deteniendo y limpiando contenedores anteriores..."
                     docker-compose -p pipeline-test down --volumes --remove-orphans || true
                 '''
             }
@@ -14,7 +14,7 @@ pipeline {
         stage('Limpiar contenedores previos') {
             steps {
                 sh '''
-                    echo "🧹 Eliminando contenedor mysql-db si ya existe..."
+                    echo "🩹 Eliminando contenedor mysql-db si ya existe..."
                     docker rm -f mysql-db || true
                 '''
             }
@@ -30,12 +30,11 @@ pipeline {
                     echo "⌛ Esperando que el servicio web esté listo..."
                     sleep 5
 
-                    echo "🧚 Ejecutando pruebas..."
+                    echo "🧺 Ejecutando pruebas..."
                     docker-compose -p pipeline-test exec web python -m unittest discover -s test || true
 
-                    echo "🧹 Apagando servicios después de las pruebas..."
+                    echo "🩹 Apagando servicios después de las pruebas..."
                     docker-compose -p pipeline-test down
-                    
                 '''
             }
         }
