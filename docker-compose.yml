@@ -1,12 +1,10 @@
-version: '3.8'
-
 networks:
   pipeline_net:
     name: pipeline_net
     driver: bridge
-    enable_ipv6: false  # ← EXPLÍCITO Y CONSTANTE
+    enable_ipv6: false
     ipam:
-      driver: default   # ← Recomendado para evitar conflictos
+      driver: default
 
 services:
   web:
