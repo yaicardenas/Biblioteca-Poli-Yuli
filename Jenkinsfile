@@ -1,21 +1,17 @@
 pipeline {
     agent any
 
-    environment {
-        COMPOSE_PROJECT_NAME = "pipeline-test"
-    }
-
     stages {
-        stage('Detener contenedores y limpiar') {
+        stage('Preparar entorno limpio') {
             steps {
                 sh '''
-                    echo "🛑 Deteniendo y eliminando contenedores existentes..."
-                    docker-compose -p $COMPOSE_PROJECT_NAME down --remove-orphans --volumes || true
+                    echo 🧯 Deteniendo contenedores anteriores...
+                    docker stop flask-app mysql-db || true
 
-                    echo "🧹 Esperando a que contenedores liberen la red..."
-                    sleep 5
+                    echo 🗑 Eliminando contenedores anteriores...
+                    docker rm flask-app mysql-db || true
 
-                    echo "🧯 Eliminando red Docker si existe..."
+                    echo 🔧 Eliminando red de pruebas si está vacía...
                     docker network rm pipeline_net || true
                 '''
             }
@@ -24,41 +20,34 @@ pipeline {
         stage('Build y levantar entorno para pruebas') {
             steps {
                 sh '''
-                    echo "🔧 Levantando entorno para pruebas..."
-                    docker-compose -p $COMPOSE_PROJECT_NAME up -d --build
+                    echo 🔧 Levantando entorno para pruebas...
+                    docker-compose -p pipeline-test up -d --build
                 '''
             }
         }
 
         stage('Ejecutar pruebas') {
             steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh '''
-                        echo "🧪 Ejecutando pruebas..."
-                        docker-compose -p $COMPOSE_PROJECT_NAME exec web \
-                            python -m unittest discover -s test || true
-                    '''
-                }
+                sh '''
+                    echo 🧪 Ejecutando pruebas...
+                    # aquí va tu comando de pruebas, por ejemplo:
+                    docker exec flask-app pytest || exit 1
+                '''
             }
         }
 
         stage('Limpiar entorno Docker') {
             steps {
                 sh '''
-                    echo "🧽 Limpiando entorno..."
-                    docker-compose -p $COMPOSE_PROJECT_NAME down --remove-orphans --volumes || true
-                    docker system prune -f || true
+                    echo 🧹 Deteniendo entorno de pruebas...
+                    docker-compose -p pipeline-test down || true
                 '''
             }
         }
 
         stage('Desplegar en producción') {
-            when { expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' } }
             steps {
-                sh '''
-                    echo "🚀 Desplegando contenedores productivos..."
-                    docker-compose -p $COMPOSE_PROJECT_NAME up -d
-                '''
+                echo '🚀 Aquí iría tu lógica de despliegue...'
             }
         }
     }
