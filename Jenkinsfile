@@ -23,8 +23,11 @@ pipeline {
                     echo "🔧 Levantando sólo el servicio web para pruebas..."
                     docker-compose -p pipeline-test up -d db web
 
-                    echo "⌛ Esperando 5 segundos..."
-                    sleep 5
+                    echo "⏳ Esperando a que la base de datos esté lista..."
+                    until docker-compose exec -T web bash -c "mysqladmin ping -h mysql-db --silent"; do
+                        echo "Esperando base de datos..."
+                        sleep 2
+                    done
 
                     echo "🧪 Ejecutando pruebas unitarias..."
                     docker-compose exec -T web python -m unittest discover -s test -v > resultados_test.log 2>&1
@@ -40,7 +43,6 @@ pipeline {
                 '''
             }
         }
-
 
 
         stage('Limpiar entorno Docker') {
