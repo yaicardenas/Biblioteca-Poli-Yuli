@@ -40,7 +40,7 @@ pipeline {
                     docker-compose exec web python -m unittest discover -s test
 
                     echo "🧹 Apagando servicios después de las pruebas..."
-                    docker-compose down
+                    docker-compose down -v
                 '''
             }
         }
@@ -49,7 +49,7 @@ pipeline {
             steps {
                 sh '''
                     echo "🚀 Desplegando contenedores..."
-                    docker-compose up -d
+                    docker-compose up -d --build
                 '''
             }
         }
