@@ -6,7 +6,16 @@ pipeline {
     }
 
     stages {
-        stage('Preparar red limpia') {
+        stage('Detener y limpiar contenedores antiguos') {
+            steps {
+                sh '''
+                    echo "🛑 Deteniendo contenedores si existen..."
+                    docker-compose -p $COMPOSE_PROJECT_NAME down --remove-orphans --volumes || true
+                '''
+            }
+        }
+
+        stage('Eliminar red Docker previa si existe') {
             steps {
                 sh '''
                     echo "🧹 Eliminando red Docker previa si existe..."
@@ -39,26 +48,20 @@ pipeline {
         stage('Limpiar entorno Docker') {
             steps {
                 sh '''
-                    echo "🏁 Deteniendo y limpiando contenedores de prueba..."
+                    echo "🧽 Limpiando entorno de pruebas..."
                     docker-compose -p $COMPOSE_PROJECT_NAME down --remove-orphans --volumes || true
-
-                    echo "🧹 Limpiando redes y volúmenes huérfanos..."
-                    docker network rm pipeline_net || true
-                    docker network prune -f || true
-                    docker volume prune -f || true
+                    docker system prune -f || true
                 '''
             }
         }
 
         stage('Desplegar en producción') {
             when {
-                expression {
-                    currentBuild.result == null || currentBuild.result == 'SUCCESS'
-                }
+                expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
             }
             steps {
                 sh '''
-                    echo "🚀 Desplegando contenedores productivos..."
+                    echo "🚀 Desplegando en producción..."
                     docker-compose -p $COMPOSE_PROJECT_NAME up -d
                 '''
             }
