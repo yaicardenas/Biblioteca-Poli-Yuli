@@ -23,21 +23,14 @@ pipeline {
                     echo "🔧 Levantando sólo el servicio web para pruebas..."
                     docker-compose -p pipeline-test up -d web
 
-                    echo "⌛ Esperando que el contenedor web esté listo..."
-                    for i in {1..10}; do
-                        if docker ps | grep -q "pipeline-test_web"; then
-                            echo "✅ Contenedor web está listo."
-                            break
-                        fi
-                        echo "⏳ Esperando... ($i/10)"
-                        sleep 2
-                    done
+                    echo "⌛ Esperando 5 segundos..."
+                    sleep 5
 
-                    echo "🧪 Ejecutando pruebas unitarias dentro del contenedor web..."
-                    docker-compose -p pipeline-test run --rm web python -m unittest discover -s test
+                    echo "🧪 Ejecutando pruebas unitarias..."
+                    docker-compose exec -T web python -m unittest discover -s test
                     status=$?
 
-                    echo "🧹 Apagando servicio web después de las pruebas..."
+                    echo "🧹 Apagando entorno..."
                     docker-compose -p pipeline-test down
 
                     exit $status

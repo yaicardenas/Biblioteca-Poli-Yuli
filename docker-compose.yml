@@ -2,11 +2,9 @@ version: '3.8'
 
 networks:
   pipeline_net:
-    name: pipeline_net
     driver: bridge
-    enable_ipv6: false  # ← EXPLÍCITO Y CONSTANTE
-    ipam:
-      driver: default   # ← Recomendado para evitar conflictos
+    driver_opts:
+      com.docker.network.enable_ipv4: "false"  # <- Esto podría ser el problema
 
 services:
   web:
