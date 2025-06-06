@@ -42,6 +42,7 @@ pipeline {
         }
 
 
+
         stage('Limpiar entorno Docker') {
             steps {
                 sh '''
