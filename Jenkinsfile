@@ -17,15 +17,6 @@ pipeline {
             }
         }
 
-        stage('Build y levantar entorno para pruebas') {
-            steps {
-                sh '''
-                    echo 🔧 Levantando entorno para pruebas...
-                    docker-compose -p pipeline-test up -d --build
-                '''
-            }
-        }
-
         stage('Ejecutar pruebas') {
             steps {
                 sh '''
