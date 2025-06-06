@@ -1,5 +1,14 @@
 version: '3.8'
 
+networks:
+  pipeline_net:
+    name: pipeline_net        # nombre real en Docker
+    driver: bridge
+    # Fuerza el mismo set de flags siempre:
+    ipam:
+      driver: default
+    enable_ipv6: false        # o true, pero SIEMPRE igual
+
 services:
   web:
     build: ./app
@@ -8,6 +17,8 @@ services:
       - "5000:5000"
     depends_on:
       - db
+    networks:
+      - pipeline_net          # ← usar la red fija
 
   db:
     image: mysql:8.0
@@ -20,9 +31,10 @@ services:
       - "3306:3306"
     volumes:
       - ./mysql-init:/docker-entrypoint-initdb.d
+    networks:
+      - pipeline_net
 
   jenkins:
-    build: ./jenkins
     image: jenkins/jenkins:lts
     container_name: jenkins-server
     user: root
@@ -34,6 +46,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
+    networks:
+      - pipeline_net
 
 volumes:
   jenkins_home:

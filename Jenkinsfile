@@ -6,20 +6,16 @@ pipeline {
         stage('Limpiar entorno Docker') {
             steps {
                 sh '''
-                    echo "🏩 Deteniendo y limpiando contenedores anteriores..."
-                    docker-compose -p pipeline-test down --volumes --remove-orphans || true
+                    echo "🏩 Deteniendo y limpiando todo..."
+                    docker-compose -p pipeline-test down --remove-orphans --volumes || true
 
-                    echo "🔧 Eliminando red si existe (evitar errores por IPv6)..."
-                    docker network rm pipeline-test_default || true
-                '''
-            }
-        }
+                    echo "🗑️ Eliminando contenedores y red fija..."
+                    docker rm -f mysql-db flask-app jenkins-server || true
+                    docker network rm pipeline_net || true
 
-        stage('Limpiar contenedores previos') {
-            steps {
-                sh '''
-                    echo "🧹 Eliminando contenedores previos si existen..."
-                    docker rm -f mysql-db flask-app || true
+                    echo "🧹 Limpiando redes y volúmenes huérfanos..."
+                    docker network prune -f || true
+                    docker volume  prune -f || true
                 '''
             }
         }
@@ -28,33 +24,32 @@ pipeline {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh '''
-                        echo "🔧 Levantando servicio web para ejecutar pruebas..."
+                        echo "🔧 Levantando base de datos..."
                         docker-compose -p pipeline-test up -d db
                         sleep 5
+
+                        echo "🌐 Levantando web..."
                         docker-compose -p pipeline-test up -d web
 
-                        echo "⌛ Esperando que el servicio web esté listo..."
+                        echo "⌛ Esperando que web esté lista..."
                         sleep 5
 
-                        echo "🧚 Ejecutando pruebas..."
-                        docker-compose -p pipeline-test exec web python -m unittest discover -s test || true
+                        echo "🧪 Ejecutando pruebas..."
+                        docker-compose -p pipeline-test exec web \
+                            python -m unittest discover -s test || true
 
-                        echo "🧹 Apagando servicios después de las pruebas..."
+                        echo "🧹 Apagando servicios..."
                         docker-compose -p pipeline-test down
                     '''
                 }
-                sh 'docker ps -a'
             }
         }
 
         stage('Desplegar') {
-            when {
-                expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
-            }
+            when { expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' } }
             steps {
                 sh '''
-                    echo "🚀 Desplegando contenedores..."
-                    docker rm -f flask-app || true
+                    echo "🚀 Desplegando contenedores productivos..."
                     docker-compose -p pipeline-test up -d
                 '''
             }
