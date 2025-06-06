@@ -10,18 +10,18 @@ networks:
 
 services:
   web:
-    build:
-      context: .
-      dockerfile: app/Dockerfile   # si el Dockerfile está dentro de ./app
+    build: ./app
     container_name: flask-app
     ports:
       - "5000:5000"
     depends_on:
       - db
     volumes:
-      - .:/app       # monta todo el proyecto en /app dentro del contenedor
+      - ./app:/app
+      - ./test:/app/test
     networks:
       - pipeline_net
+
 
   db:
     image: mysql:8.0
