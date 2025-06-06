@@ -2,12 +2,8 @@ version: '3.8'
 
 networks:
   pipeline_net:
-    name: pipeline_net        # nombre real en Docker
+    name: pipeline_net
     driver: bridge
-    # Fuerza el mismo set de flags siempre:
-    ipam:
-      driver: default
-    enable_ipv6: false        # o true, pero SIEMPRE igual
 
 services:
   web:
@@ -18,7 +14,7 @@ services:
     depends_on:
       - db
     networks:
-      - pipeline_net          # ← usar la red fija
+      - pipeline_net
 
   db:
     image: mysql:8.0
