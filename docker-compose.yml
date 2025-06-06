@@ -2,9 +2,6 @@ networks:
   pipeline_net:
     name: pipeline_net
     driver: bridge
-    enable_ipv6: false
-    ipam:
-      driver: default
 
 services:
   web:
