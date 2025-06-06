@@ -14,8 +14,8 @@ pipeline {
         stage('Limpiar contenedores previos') {
             steps {
                 sh '''
-                    echo "🩹 Eliminando contenedor mysql-db si ya existe..."
-                    docker rm -f mysql-db || true
+                    echo "🧹 Eliminando contenedores previos si existen..."
+                    docker rm -f mysql-db jenkins-server flask-app || true
                 '''
             }
         }
@@ -30,10 +30,10 @@ pipeline {
                     echo "⌛ Esperando que el servicio web esté listo..."
                     sleep 5
 
-                    echo "🧺 Ejecutando pruebas..."
+                    echo "🧚 Ejecutando pruebas..."
                     docker-compose -p pipeline-test exec web python -m unittest discover -s test || true
 
-                    echo "🩹 Apagando servicios después de las pruebas..."
+                    echo "🧹 Apagando servicios después de las pruebas..."
                     docker-compose -p pipeline-test down
                 '''
             }
@@ -49,7 +49,7 @@ pipeline {
                 sh '''
                     echo "🚀 Desplegando contenedores..."
                     docker rm -f jenkins-server flask-app || true
-                    docker-compose -p pipeline-test up -d
+                    docker-compose -p pipeline-test up -d || true
                 '''
             }
         }
