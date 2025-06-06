@@ -47,7 +47,10 @@ pipeline {
 
         stage('Desplegar en producción') {
             steps {
-                echo '🚀 Aquí iría tu lógica de despliegue...'
+                sh '''
+                    echo "🔧 Levantando entorno para pruebas (solo web y db)..."
+                    docker-compose -p pipeline-test up -d --build web db
+                '''
             }
         }
     }

@@ -1,10 +1,79 @@
-📚 Sistema de Gestión Bibliotecaria
-Universidad Politécnico Grancolombiano - Integración Continua
-<div align="center"> <img src="https://img.shields.io/badge/Estado-En%20Desarrollo-success" alt="Estado"> <img src="https://img.shields.io/badge/Versión-1.0.0-blue" alt="Versión"></div>
+# 📚 Biblioteca-Poli
+
+Proyecto Flask + MySQL con integración continua usando Jenkins y Docker.
+
+---
+
+## 🧱 Estructura del Proyecto
+
+Biblioteca-Poli/
+├── app/ # Aplicación Flask
+│ ├── static/ # Archivos estáticos (CSS, JS, etc.)
+│ │ └── css/
+│ │  ├── estilos.css
+│ │  └── hola_mundo.py
+│ ├── templates/ # Plantillas HTML
+│ ├── app.py # Entrada principal
+│ ├── main.py # Lógica general
+│ ├── hola_mundo.py # Script auxiliar
+│ ├── Dockerfile # Dockerfile para la app Flask
+│ └── requirements.txt # Dependencias de Python
+│
+├── jenkins/ # Configuración personalizada (opcional)
+│ └── Dockerfile # Dockerfile de Jenkins (si se personaliza)
+│
+├── mysql-init/ # Scripts de inicialización de MySQL
+│ └── init.sql
+│
+├── test/ # Pruebas automatizadas
+│ └── tests.py
+├── docker-compose.yml # Compose principal (usa Jenkins)
+├── docker-compose-inicial.yml # Versión inicial (solo app + db)
+├── Jenkinsfile # Pipeline de CI/CD
+├── .gitignore
+└── README.md
+
+---
+
+## 🚀 Tecnologías
+
+- **Flask** (backend web)
+- **MySQL** (base de datos)
+- **Docker + Docker Compose**
+- **Jenkins** (CI/CD)
+- **GitHub Webhooks**
+
+---
+
+## ⚙️ Instalación Local
+
+### 1. Levantar entorno sin Jenkins (solo para pruebas iniciales):
+
+docker-compose -f docker-compose-inicial.yml up --build
 
 
+### 2. Levantar entorno completo con Jenkins:
+docker-compose up --build
+Jenkins quedará disponible en: http://localhost:8080
 
-👥 Equipo de Desarrollo
+App Flask en: http://localhost:5000
+
+### 🧪 Pruebas Automatizadas
+El archivo test/tests.py contiene pruebas de validación para la app.
+
+### 🔄 Integración Continua con Jenkins
+📁 Jenkinsfile
+Contiene las etapas del pipeline:
+
+Detener y limpiar contenedores anteriores.
+
+Levantar entorno con docker-compose.
+
+Ejecutar pruebas automatizadas.
+
+Detener el entorno.
+
+### 👥 Equipo de Desarrollo
 Integrantes:
 
 Diana Lucía Hernández Bayona
@@ -16,18 +85,6 @@ Karen Nicol Ñustes Florez
 Johan Esteban Rodríguez Duarte
 
 Yuliana Aide Cárdenas Jaramillo
-
-
-
-🛠 Stack Tecnológico
-Frontend
-<div> <img src="https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white" alt="HTML5"> <img src="https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white" alt="CSS3"> <img src="https://img.shields.io/badge/Bootstrap-7952B3?logo=bootstrap&logoColor=white" alt="Bootstrap"> </div>
-Backend
-<div> <img src="https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white" alt="Python"> <img src="https://img.shields.io/badge/Flask-000000?logo=flask&logoColor=white" alt="Flask"> </div>
-Base de Datos
-<div> <img src="https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=white" alt="MySQL"> </div>
-DevOps
-<div> <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?logo=github-actions&logoColor=white" alt="GitHub Actions"> <img src="https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white" alt="Docker"> </div>
 
 
 
