@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     stages {
+
         stage('Limpiar entorno Docker') {
             steps {
                 sh '''
@@ -25,33 +26,29 @@ pipeline {
                 sh '''
                     echo "🔧 Levantando servicio web para ejecutar pruebas..."
                     docker-compose -p pipeline-test up -d db
-                    docker-compose -p pipeline-test up -d web || true
+                    docker-compose -p pipeline-test up -d web        # sube web después de la BD
 
                     echo "⌛ Esperando que el servicio web esté listo..."
                     sleep 5
 
                     echo "🧚 Ejecutando pruebas..."
-                    docker-compose -p pipeline-test exec web python -m unittest discover -s test || true
+                    docker-compose -p pipeline-test exec web \
+                        python -m unittest discover -s test
 
                     echo "🧹 Apagando servicios después de las pruebas..."
                     docker-compose -p pipeline-test down
                 '''
-            }docker ps -a
+                sh 'docker ps -a'      // ahora sí dentro de “steps”
+            }
         }
 
         stage('Desplegar') {
-            when {
-                expression {
-                    currentBuild.result == null || currentBuild.result == 'SUCCESS'
-                }
-            }
+            when { expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' } }
             steps {
                 sh '''
                     echo "🚀 Desplegando contenedores..."
-                    sleep 2
                     docker rm -f flask-app || true
-                    sleep 2
-                    docker-compose -p pipeline-test up -d || true
+                    docker-compose -p pipeline-test up -d
                 '''
             }
         }
