@@ -31,6 +31,7 @@ def agregar():
         autor = request.form['autor']
         categoria = request.form['categoria']
         cantidad = request.form['cantidad']
+        
 
         conexion = obtener_conexion()
         cursor = conexion.cursor()
