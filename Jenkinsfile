@@ -10,6 +10,15 @@ pipeline {
                 '''
             }
         }
+        
+        stage('Limpiar contenedores previos') {
+            steps {
+                sh '''
+                    echo "🧹 Eliminando contenedor mysql-db si ya existe..."
+                    docker rm -f mysql-db || true
+                '''
+            }
+        }
 
         stage('Ejecutar pruebas') {
             steps {
