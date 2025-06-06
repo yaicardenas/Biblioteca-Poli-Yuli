@@ -21,14 +21,17 @@ pipeline {
             steps {
                 sh '''
                     echo "🔧 Levantando sólo el servicio web para pruebas..."
-                    docker-compose -p pipeline-test up -d web db
+                    docker-compose -p pipeline-test up -d db web
 
                     echo "⌛ Esperando 5 segundos..."
                     sleep 5
 
                     echo "🧪 Ejecutando pruebas unitarias..."
-                    docker-compose exec -T web python -m unittest discover -s test
+                    docker-compose exec -T web python -m unittest discover -s test -v > resultados_test.log 2>&1
                     status=$?
+
+                    echo "📄 Resultados de pruebas:"
+                    cat resultados_test.log
 
                     echo "🧹 Apagando entorno..."
                     docker-compose -p pipeline-test down
@@ -37,6 +40,7 @@ pipeline {
                 '''
             }
         }
+
 
         stage('Limpiar entorno Docker') {
             steps {
