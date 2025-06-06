@@ -21,13 +21,8 @@ pipeline {
             steps {
                 sh '''
                     echo "🔧 Levantando sólo el servicio web para pruebas..."
-                    docker-compose -p pipeline-test up -d db web
-
-                    echo "⏳ Esperando a que la base de datos esté disponible..."
-                    until docker-compose exec -T web bash -c "echo > /dev/tcp/mysql-db/3306" 2>/dev/null; do
-                        echo "Esperando base de datos..."
-                        sleep 2
-                    done
+                    docker-compose -p pipeline-test up -d db
+                    docker-compose -p pipeline-test up -d web
 
                     echo "🧪 Ejecutando pruebas unitarias..."
                     docker-compose exec -T web python -m unittest discover -s test -v > resultados_test.log 2>&1

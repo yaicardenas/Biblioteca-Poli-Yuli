@@ -8,3 +8,5 @@ CREATE TABLE IF NOT EXISTS libros (
     categoria VARCHAR(255),
     cantidad INT
 );
+INSERT INTO libros (titulo, autor, categoria, cantidad)
+VALUES ('Cien años de soledad', 'Gabriel García Márquez', 'Novela', 3);
