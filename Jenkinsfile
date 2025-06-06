@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        COMPOSE_PROJECT_NAME = 'pipeline'
-    }
-
     stages {
         stage('Liberar puerto MySQL') {
             steps {
@@ -50,7 +46,7 @@ pipeline {
             steps {
                 sh '''
                     echo "🚀 Desplegando contenedores..."
-                    docker-compose up -d
+                    docker-compose up -d --build
                 '''
             }
         }
