@@ -14,7 +14,7 @@ pipeline {
                     echo 🔧 Eliminando redes antiguas específicas...
                     docker network rm pipeline_net || true
                     docker network rm pipeline-test_default || true
-                    docker network rm pipeline-test_pipeline_net || true  # <--- esta línea
+                    docker network rm pipeline-test_pipeline_net || true
 
                     echo 🔄 Prune de redes no usadas...
                     docker network prune -f || true
@@ -22,12 +22,18 @@ pipeline {
             }
         }
 
-
         stage('Ejecutar pruebas unitarias') {
             steps {
                 sh '''
-                    echo "🔧 Levantando solo el servicio de base de datos..."
-                    docker-compose -p pipeline-test up -d db web
+                    echo "🔧 Levantando servicio de base de datos..."
+                    docker-compose -p pipeline-test up -d db
+
+                    echo "⌛ Esperando que la base de datos esté lista..."
+                    # Espera simple, idealmente reemplazar por check real
+                    sleep 15
+
+                    echo "🔧 Levantando servicio web..."
+                    docker-compose -p pipeline-test up -d web
 
                     echo "🧪 Ejecutando pruebas unitarias..."
                     docker-compose exec -T web python -m unittest discover -s test -v > resultados_test.log 2>&1
@@ -66,7 +72,7 @@ pipeline {
             steps {
                 sh '''
                     echo "🚀 Desplegando en producción..."
-                    docker-compose -p pipeline-test up -d --build web db
+                    docker-compose -p pipeline-test up -d --build db web
                 '''
             }
         }

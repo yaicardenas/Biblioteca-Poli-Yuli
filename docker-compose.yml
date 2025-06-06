@@ -10,7 +10,7 @@ services:
       - ./app:/app
       - ./test:/app/test
     networks:
-      - pipeline_net
+      - webnet
 
 
   db:
@@ -25,7 +25,7 @@ services:
     volumes:
       - ./mysql-init:/docker-entrypoint-initdb.d
     networks:
-      - pipeline_net
+      - dbnet
 
   jenkins:
     image: jenkins/jenkins:lts
@@ -46,6 +46,8 @@ volumes:
   jenkins_home:
 
 networks:
-  pipeline_net:
+  webnet:
+    driver: bridge
+  dbnet:
     driver: bridge
 
