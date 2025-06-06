@@ -6,12 +6,18 @@ pipeline {
     }
 
     stages {
+        stage('Preparar red limpia') {
+            steps {
+                sh '''
+                    echo "🧹 Eliminando red Docker previa si existe..."
+                    docker network rm pipeline_net || true
+                '''
+            }
+        }
+
         stage('Build y levantar entorno para pruebas') {
             steps {
                 sh '''
-                    echo "🧨 Verificando y eliminando red previa si existe..."
-                    docker network rm pipeline_net || true
-
                     echo "🔧 Levantando entorno para pruebas..."
                     docker-compose -p $COMPOSE_PROJECT_NAME up -d --build
                 '''
