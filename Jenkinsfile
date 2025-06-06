@@ -17,6 +17,9 @@ pipeline {
 
                     echo 🔄 Prune de redes no usadas...
                     docker network prune -f || true
+
+                    echo 🔧 Eliminando red pipeline_net si existe...
+                    docker network inspect pipeline_net && docker network rm pipeline_net || true
                 '''
             }
         }
