@@ -17,12 +17,20 @@ pipeline {
             }
         }
 
-        stage('Ejecutar pruebas') {
+        stage('Ejecutar pruebas unitarias') {
             steps {
                 sh '''
-                    echo 🧪 Ejecutando pruebas...
-                    # aquí va tu comando de pruebas, por ejemplo:
-                    docker exec flask-app pytest || exit 1
+                    echo "🔧 Levantando sólo el servicio web para pruebas..."
+                    docker-compose -p pipeline-test up -d web
+
+                    echo "⌛ Esperando que el contenedor web esté listo..."
+                    sleep 5
+
+                    echo "🧪 Ejecutando pruebas unitarias dentro del contenedor web..."
+                    docker-compose -p pipeline-test exec web python -m unittest discover -s test || true
+
+                    echo "🧹 Apagando servicio web después de las pruebas..."
+                    docker-compose -p pipeline-test down
                 '''
             }
         }
