@@ -48,7 +48,6 @@ pipeline {
             steps {
                 sh '''
                     echo "🚀 Desplegando contenedores..."
-                    docker rm -f jenkins-server || true
                     sleep 2
                     docker rm -f flask-app || true
                     sleep 2
