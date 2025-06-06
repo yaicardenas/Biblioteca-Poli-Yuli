@@ -10,12 +10,16 @@ networks:
 
 services:
   web:
-    build: ./app
+    build:
+      context: .
+      dockerfile: app/Dockerfile   # si el Dockerfile está dentro de ./app
     container_name: flask-app
     ports:
       - "5000:5000"
     depends_on:
       - db
+    volumes:
+      - .:/app       # monta todo el proyecto en /app dentro del contenedor
     networks:
       - pipeline_net
 
