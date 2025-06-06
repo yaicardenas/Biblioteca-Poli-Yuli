@@ -15,7 +15,7 @@ pipeline {
             steps {
                 sh '''
                     echo "🧹 Eliminando contenedores previos si existen..."
-                    docker rm -f mysql-db jenkins-server flask-app || true
+                    docker rm -f mysql-db flask-app || true
                 '''
             }
         }
@@ -36,7 +36,7 @@ pipeline {
                     echo "🧹 Apagando servicios después de las pruebas..."
                     docker-compose -p pipeline-test down
                 '''
-            }
+            }docker ps -a
         }
 
         stage('Desplegar') {
