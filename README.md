@@ -5,33 +5,34 @@ Proyecto Flask + MySQL con integración continua usando Jenkins y Docker.
 ---
 
 ## 🧱 Estructura del Proyecto
-
+<pre> 
 Biblioteca-Poli/
-├── app/ # Aplicación Flask
-│ ├── static/ # Archivos estáticos (CSS, JS, etc.)
-│ │ └── css/
-│ │  ├── estilos.css
-│ │  └── hola_mundo.py
-│ ├── templates/ # Plantillas HTML
-│ ├── app.py # Entrada principal
-│ ├── main.py # Lógica general
-│ ├── hola_mundo.py # Script auxiliar
-│ ├── Dockerfile # Dockerfile para la app Flask
-│ └── requirements.txt # Dependencias de Python
+├── app/                        # Aplicación Flask
+│   ├── static/                # Archivos estáticos (CSS, JS)
+│   │   └── css/
+│   │       ├── estilos.css
+│   ├── templates/             # Plantillas HTML
+│   ├── app.py                 # Entrada principal
+│   ├── main.py                # Lógica principal
+│   ├── hola_mundo.py          # Script auxiliar
+│   ├── Dockerfile             # Dockerfile para la app Flask
+│   └── requirements.txt       # Dependencias
 │
-├── jenkins/ # Configuración personalizada (opcional)
-│ └── Dockerfile # Dockerfile de Jenkins (si se personaliza)
+├── jenkins/
+│   └── Dockerfile             # Dockerfile para Jenkins (si se personaliza)
 │
-├── mysql-init/ # Scripts de inicialización de MySQL
-│ └── init.sql
+├── mysql-init/
+│   └── init.sql               # Script de inicialización de base de datos
 │
-├── test/ # Pruebas automatizadas
-│ └── tests.py
-├── docker-compose.yml # Compose principal (usa Jenkins)
-├── docker-compose-inicial.yml # Versión inicial (solo app + db)
-├── Jenkinsfile # Pipeline de CI/CD
+├── test/
+│   └── tests.py               # Pruebas automatizadas
+│
+├── docker-compose.yml         # Compose principal (usa Jenkins)
+├── docker-compose-inicial.yml # Solo app + DB sin Jenkins
+├── Jenkinsfile                # Pipeline CI/CD
 ├── .gitignore
 └── README.md
+</pre>
 
 ---
 

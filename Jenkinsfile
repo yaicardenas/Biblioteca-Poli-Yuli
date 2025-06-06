@@ -27,7 +27,7 @@ pipeline {
                     sleep 5
 
                     echo "🧪 Ejecutando pruebas unitarias dentro del contenedor web..."
-                    docker-compose -p pipeline-test exec web python -m unittest discover -s test || true
+                    docker-compose -p pipeline-test exec web python -m unittest discover -s test
 
                     echo "🧹 Apagando servicio web después de las pruebas..."
                     docker-compose -p pipeline-test down
@@ -47,7 +47,7 @@ pipeline {
         stage('Desplegar en producción') {
             steps {
                 sh '''
-                    echo "🔧 Levantando entorno para pruebas (solo web y db)..."
+                    echo "🔧 Levantando entorno"
                     docker-compose -p pipeline-test up -d --build web db
                 '''
             }
