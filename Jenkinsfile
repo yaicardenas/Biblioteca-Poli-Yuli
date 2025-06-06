@@ -1,31 +1,27 @@
-pipeline{
+pipeline {
     agent any
 
-    enviroment{
+    environment {
         DOCKER_HOST = 'unix:///var/run/docker.sock'
     }
 
     stages {
-        stage('build') {
+        stage('Construir contenedores') {
             steps {
-                script {
-                    sh 'docker-compose build'
-                }
-            }
-        }
-        stage('Test') {
-            steps {
-                script {
-                   sh '''
-                       docker rm -f app_web || true
-                       docker rm -f db || true
-                       docker rm -f ci_jenkins || true
-                       docker-compose down || true
-                       docker-compose up -d
-                   '''
-                }
+                sh 'docker-compose build'
             }
         }
 
+        stage('Ejecutar pruebas') {
+            steps {
+                sh 'docker-compose run --rm web python unittest discover test'
+            }
+        }
+
+        stage('Desplegar'){
+            steps{
+                sh 'docker-compose up -d'
+            }
+        }
     }
 }
