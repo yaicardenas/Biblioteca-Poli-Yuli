@@ -10,7 +10,7 @@ pipeline {
                     docker-compose -p pipeline-test down --remove-orphans --volumes || true
 
                     echo "🗑️ Eliminando contenedores y red fija..."
-                    docker rm -f mysql-db flask-app jenkins-server || true
+                    docker rm -f mysql-db flask-app || true
                     docker network rm pipeline_net || true
 
                     echo "🧹 Limpiando redes y volúmenes huérfanos..."
