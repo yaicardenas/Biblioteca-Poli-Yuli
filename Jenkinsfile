@@ -4,6 +4,28 @@ pipeline {
     environment {
         COMPOSE_PROJECT_NAME = 'pipeline'
     }
+    
+    stage('Liberar puerto MySQL') {
+        steps {
+            sh '''
+                echo "🔍 Buscando contenedor que tenga mapeado el puerto 3306 o 3307..."
+
+                # Busca contenedores que publiquen 3306 o 3307 en el host
+                CONTAINERS=$(docker ps --filter "publish=3306" --filter "publish=3307" --format "{{.ID}}")
+
+                if [ -n "$CONTAINERS" ]; then
+                    echo "⚠️  Encontrado(s) contenedor(es) usando 3306/3307:"
+                    docker ps --filter "id=$CONTAINERS" --format "  -> {{.ID}} {{.Names}} ({{.Ports}})"
+
+                    echo "🛑 Deteniendo y eliminando contenedor(es)..."
+                    docker rm -f $CONTAINERS
+                    echo "✅ Puerto liberado."
+                else
+                    echo "✅ Ningún contenedor usa 3306 ni 3307."
+                fi
+            '''
+        }
+    }
 
     stages {
         stage('Limpiar entorno previo') {
