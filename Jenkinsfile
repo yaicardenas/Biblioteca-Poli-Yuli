@@ -14,6 +14,8 @@ pipeline {
                     echo 🔧 Eliminando red de pruebas si está vacía...
                     docker network rm pipeline_net || true
                     docker network rm pipeline-test_default || true
+                    docker network prune -f
+
                 '''
             }
         }
