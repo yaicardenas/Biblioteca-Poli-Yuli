@@ -21,7 +21,7 @@ pipeline {
             steps {
                 sh '''
                     echo "🔧 Levantando sólo el servicio web para pruebas..."
-                    docker-compose -p pipeline-test up -d web
+                    docker-compose -p pipeline-test up -d web db
 
                     echo "⌛ Esperando 5 segundos..."
                     sleep 5
