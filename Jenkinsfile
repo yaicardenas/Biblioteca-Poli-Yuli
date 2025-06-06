@@ -1,7 +1,6 @@
 pipeline {
     agent any
 
-    stages {
         stage('Preparar entorno limpio') {
             steps {
                 sh '''
@@ -13,10 +12,11 @@ pipeline {
 
                     echo 🔧 Eliminando red de pruebas si está vacía...
                     docker network rm pipeline_net || true
+                    docker network rm pipeline-test_default || true
                 '''
             }
         }
-
+        
         stage('Ejecutar pruebas unitarias') {
             steps {
                 sh '''
