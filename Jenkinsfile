@@ -27,10 +27,7 @@ pipeline {
             steps {
                 sh '''
                     echo "🔧 Levantando solo el servicio de base de datos..."
-                    docker-compose -p pipeline-test up -d db
-
-                    echo "🚀 Levantando servicio web para pruebas..."
-                    docker-compose -p pipeline-test up -d web
+                    docker-compose -p pipeline-test up -d db web
 
                     echo "🧪 Ejecutando pruebas unitarias..."
                     docker-compose exec -T web python -m unittest discover -s test -v > resultados_test.log 2>&1
