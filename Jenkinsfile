@@ -24,19 +24,23 @@ pipeline {
                     docker-compose -p pipeline-test up -d web
 
                     echo "⌛ Esperando que el contenedor web esté listo..."
-                    sleep 5
+                    for i in {1..10}; do
+                        if docker ps | grep -q "pipeline-test_web"; then
+                            echo "✅ Contenedor web está listo."
+                            break
+                        fi
+                        echo "⏳ Esperando... ($i/10)"
+                        sleep 2
+                    done
 
                     echo "🧪 Ejecutando pruebas unitarias dentro del contenedor web..."
-                    docker-compose exec -T web python -m unittest discover -s test
-
-                    status=$?                      # guarda el código de salida
+                    docker-compose -p pipeline-test run --rm web python -m unittest discover -s test
+                    status=$?
 
                     echo "🧹 Apagando servicio web después de las pruebas..."
                     docker-compose -p pipeline-test down
 
-                    exit $status                   
-                    
-                    # propaga el resultado: si hay fallo, el stage marca FAILURE
+                    exit $status
                 '''
             }
         }
