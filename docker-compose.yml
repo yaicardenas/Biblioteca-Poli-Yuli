@@ -11,7 +11,7 @@ services:
       - ./test:/app/test
     # Ambos servicios ahora comparten la misma red para poder comunicarse
     networks:
-      - app-net
+      - pipeline_net 
 
   db:
     image: mysql:8.0
@@ -26,7 +26,7 @@ services:
       - ./mysql-init:/docker-entrypoint-initdb.d
     # Ambos servicios ahora comparten la misma red
     networks:
-      - app-net
+      - pipeline_net 
 
   jenkins:
     image: jenkins/jenkins:lts
@@ -47,6 +47,5 @@ volumes:
   jenkins_home:
 
 networks:
-  # Se define una única red para la aplicación
-  app-net:
+  pipeline_net :
     driver: bridge
