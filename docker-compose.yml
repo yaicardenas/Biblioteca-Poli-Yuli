@@ -9,9 +9,9 @@ services:
     volumes:
       - ./app:/app
       - ./test:/app/test
+    # Ambos servicios ahora comparten la misma red para poder comunicarse
     networks:
-      - webnet
-
+      - app-net
 
   db:
     image: mysql:8.0
@@ -24,8 +24,9 @@ services:
       - "3306:3306"
     volumes:
       - ./mysql-init:/docker-entrypoint-initdb.d
+    # Ambos servicios ahora comparten la misma red
     networks:
-      - dbnet
+      - app-net
 
   jenkins:
     image: jenkins/jenkins:lts
@@ -46,8 +47,6 @@ volumes:
   jenkins_home:
 
 networks:
-  webnet:
+  # Se define una única red para la aplicación
+  app-net:
     driver: bridge
-  dbnet:
-    driver: bridge
-

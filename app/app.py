@@ -1,17 +1,22 @@
 from flask import Flask, render_template, request, redirect
 import mysql.connector
+import time
 
 app = Flask(__name__)
 
 def obtener_conexion():
-    return mysql.connector.connect(
-        #host="localhost",
-        host="mysql-db",
-        user="root",
-        password="root",
-        database="biblioteca"
-    )
-
+    for i in range(10):  # intenta 10 veces
+        try:
+            return mysql.connector.connect(
+                host='mysql-db',
+                user='root',
+                password='root',
+                database='biblioteca'
+            )
+        except Error as e:
+            print(f"Intento {i+1}: MySQL no está listo todavía. Esperando...")
+            time.sleep(3)
+    raise Exception("No se pudo conectar a MySQL después de varios intentos.")
 
 @app.route('/')
 def inicio():
