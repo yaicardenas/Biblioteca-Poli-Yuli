@@ -35,7 +35,7 @@ pipeline {
 
                     echo "✅ Verificando que el contenedor web esté en ejecución..."
                     docker ps -a
-                    if ! docker-compose -p pipeline-test ps web | grep 'Up'; then
+                    if ! docker-compose -p pipeline-test ps flask-app | grep 'Up'; then
                         echo "❌ El servicio web no se levantó correctamente. Abortando."
                         docker-compose -p pipeline-test logs web
                         exit 1
