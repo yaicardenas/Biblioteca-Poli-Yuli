@@ -13,14 +13,14 @@ services:
     networks:
       - pipeline_net 
   web:
-    build: ./app
+    build:
+      context: ./app
     container_name: web
     ports:
       - "5000:5000"
     depends_on:
       - db
     volumes:
-      - ./app:/app
       - ./test:/app/test
     networks:
       - pipeline_net 
