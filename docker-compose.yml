@@ -9,7 +9,6 @@ services:
     volumes:
       - ./app:/app
       - ./test:/app/test
-    # Ambos servicios ahora comparten la misma red para poder comunicarse
     networks:
       - pipeline_net 
 
@@ -24,7 +23,6 @@ services:
       - "3306:3306"
     volumes:
       - ./mysql-init:/docker-entrypoint-initdb.d
-    # Ambos servicios ahora comparten la misma red
     networks:
       - pipeline_net 
 
@@ -41,11 +39,11 @@ services:
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
     networks:
-      - default
+      - pipeline_net  
 
 volumes:
   jenkins_home:
 
 networks:
-  pipeline_net :
+  pipeline_net:
     driver: bridge

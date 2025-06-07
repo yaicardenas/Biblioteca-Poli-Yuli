@@ -28,8 +28,10 @@ pipeline {
                     echo "🔧 Levantando servicio de base de datos..."
                     docker-compose -p pipeline-test up -d db
 
-                    echo "⌛ Esperando que la base de datos esté lista..."
-                    sleep 15
+                    until docker exec mysql-db mysqladmin ping -h "127.0.0.1" --silent; do
+                        echo "⌛ Esperando que la base de datos esté lista..."
+                        sleep 5
+                    done
 
                     echo "🔧 Levantando servicio web..."
                     docker-compose -p pipeline-test up -d --force-recreate --remove-orphans web
@@ -46,12 +48,15 @@ pipeline {
                     docker-compose exec -T web python -m unittest discover -s test -v > resultados_test.log 2>&1
                     status=$?
 
-                    echo "📄 Resultados de pruebas:"
-                    cat resultados_test.log
+                    if [ $status -ne 0 ]; then
+                      echo "📄 Resultados de pruebas con errores:"
+                      cat resultados_test.log
+                    else
+                      echo "✅ Pruebas unitarias exitosas."
+                    fi
 
                     exit $status
                 '''
-
             }
         }
 
