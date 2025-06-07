@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Preparar entorno limpio') {
             steps {
-                sh '''
+                sh '''#!/bin/bash
                     echo 🧯 Deteniendo contenedores anteriores...
                     docker stop flask-app mysql-db || true
 
@@ -24,7 +24,7 @@ pipeline {
 
         stage('Ejecutar pruebas unitarias') {
             steps {
-                sh '''
+                sh '''#!/bin/bash
                     echo "🔧 Levantando servicio de base de datos..."
                     docker-compose -p pipeline-test up -d db
 
@@ -52,7 +52,7 @@ pipeline {
                 expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
             }
             steps {
-                sh '''
+                sh '''#!/bin/bash
                     echo 🧹 Deteniendo entorno de pruebas (redundante, por si acaso)...
                     docker-compose -p pipeline-test down || true
 
@@ -67,7 +67,7 @@ pipeline {
                 expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
             }
             steps {
-                sh '''
+                sh '''#!/bin/bash
                     echo "🚀 Desplegando en producción..."
                     docker-compose -p pipeline-test up -d --build db web
                 '''
