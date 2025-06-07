@@ -32,7 +32,7 @@ pipeline {
                     sleep 15
 
                     echo "🔧 Levantando servicio web..."
-                    docker-compose -p pipeline-test up -d web
+                    docker-compose -p pipeline-test up -d --force-recreate --remove-orphans web
 
                     echo "✅ Verificando que el contenedor web esté en ejecución..."
                     docker ps -a
