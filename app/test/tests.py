@@ -1,5 +1,5 @@
 import unittest
-from app import app  # Importas el objeto Flask directamente
+from app import app
 
 class BasicTestCase(unittest.TestCase):
     def setUp(self):

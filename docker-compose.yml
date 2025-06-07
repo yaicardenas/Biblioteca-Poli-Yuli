@@ -21,7 +21,7 @@ services:
     depends_on:
       - db
     volumes:
-      - ./test:/app/test
+      - ./app:app
     networks:
       - pipeline_net 
 
