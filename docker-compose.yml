@@ -1,16 +1,4 @@
 services:
-  web:
-    build: ./app
-    ports:
-      - "5000:5000"
-    depends_on:
-      - db
-    volumes:
-      - ./app:/app
-      - ./test:/app/test
-    networks:
-      - pipeline_net 
-
   db:
     image: mysql:8.0
     container_name: mysql-db
@@ -22,6 +10,18 @@ services:
       - "3306:3306"
     volumes:
       - ./mysql-init:/docker-entrypoint-initdb.d
+    networks:
+      - pipeline_net 
+  web:
+    build: ./app
+    container_name: web
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    volumes:
+      - ./app:/app
+      - ./test:/app/test
     networks:
       - pipeline_net 
 
