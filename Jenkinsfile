@@ -26,18 +26,12 @@ pipeline {
             steps {
                 sh '''#!/bin/bash
                     echo "🔧 Levantando servicio de base de datos..."
-                    docker-compose -p pipeline-test up -d db
+                    docker-compose -p pipeline-test up -d db web
 
                     until docker exec mysql-db mysqladmin ping -h "127.0.0.1" --silent; do
                         echo "⌛ Esperando que la base de datos esté lista..."
                         sleep 5
                     done
-
-                    echo "🔧 Eliminando red vieja para evitar conflicto..."
-                    docker network rm pipeline-test_pipeline_net || true
-
-                    echo "🔧 Levantando servicio web..."
-                    docker-compose -p pipeline-test up -d --force-recreate --remove-orphans web
 
                     echo "✅ Verificando que el contenedor web esté en ejecución..."
                     docker ps -a
