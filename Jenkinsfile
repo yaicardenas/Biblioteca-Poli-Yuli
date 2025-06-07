@@ -29,11 +29,18 @@ pipeline {
                     docker-compose -p pipeline-test up -d db
 
                     echo "⌛ Esperando que la base de datos esté lista..."
-                    # Espera simple, idealmente reemplazar por check real
                     sleep 15
 
                     echo "🔧 Levantando servicio web..."
                     docker-compose -p pipeline-test up -d web
+
+                    echo "✅ Verificando que el contenedor web esté en ejecución..."
+                    docker ps -a
+                    if ! docker-compose -p pipeline-test ps web | grep 'Up'; then
+                        echo "❌ El servicio web no se levantó correctamente. Abortando."
+                        docker-compose -p pipeline-test logs web
+                        exit 1
+                    fi
 
                     echo "🧪 Ejecutando pruebas unitarias..."
                     docker-compose exec -T web python -m unittest discover -s test -v > resultados_test.log 2>&1
@@ -44,6 +51,7 @@ pipeline {
 
                     exit $status
                 '''
+
             }
         }
 
