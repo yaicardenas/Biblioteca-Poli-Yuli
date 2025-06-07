@@ -4,21 +4,20 @@ pipeline {
     stages {
         stage('Preparar entorno limpio') {
             steps {
-                sh '''
-                    echo 🧯 Deteniendo solo los contenedores de app y db...
-
+                sh(script: '''
+                    echo "Deteniendo contenedores de app y db..."
                     docker stop flask-app mysql-db || true
                     docker rm flask-app mysql-db || true
 
-                    echo 🧹 Limpiando red app-net si no se usa...
+                    echo "Eliminando red app-net si no se usa..."
                     docker network rm app-net || true
 
-                    echo 📦 Eliminando imágenes dangling (sin afectar Jenkins)...
+                    echo "Limpiando imágenes dangling..."
                     docker image prune -f || true
 
-                    echo 🧹 Limpiando volúmenes huérfanos (solo si estás segura)...
+                    echo "Limpiando volúmenes huérfanos..."
                     docker volume prune -f || true
-                '''
+                ''', shell: '/bin/bash')  
             }
         }
 
