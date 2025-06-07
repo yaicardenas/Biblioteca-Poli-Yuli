@@ -33,6 +33,9 @@ pipeline {
                         sleep 5
                     done
 
+                    echo "🔧 Eliminando red vieja para evitar conflicto..."
+                    docker network rm pipeline-test_pipeline_net || true
+
                     echo "🔧 Levantando servicio web..."
                     docker-compose -p pipeline-test up -d --force-recreate --remove-orphans web
 
@@ -49,10 +52,10 @@ pipeline {
                     status=$?
 
                     if [ $status -ne 0 ]; then
-                      echo "📄 Resultados de pruebas con errores:"
-                      cat resultados_test.log
+                    echo "📄 Resultados de pruebas con errores:"
+                    cat resultados_test.log
                     else
-                      echo "✅ Pruebas unitarias exitosas."
+                    echo "✅ Pruebas unitarias exitosas."
                     fi
 
                     exit $status
