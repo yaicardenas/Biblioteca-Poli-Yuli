@@ -6,10 +6,10 @@ pipeline {
             steps {
                 sh '''#!/bin/bash
                     echo 🧯 Deteniendo contenedores anteriores...
-                    docker stop flask-app mysql-db || true
+                    docker stop web mysql-db || true
 
                     echo 🗑 Eliminando contenedores anteriores...
-                    docker rm flask-app mysql-db || true
+                    docker rm web mysql-db || true
 
                     echo 🔧 Eliminando redes antiguas específicas...
                     docker network rm pipeline_net || true
@@ -35,7 +35,7 @@ pipeline {
 
                     echo "✅ Verificando que el contenedor web esté en ejecución..."
                     docker ps -a
-                    if ! docker-compose -p pipeline-test ps flask-app | grep 'Up'; then
+                    if ! docker-compose -p pipeline-test ps web | grep 'Up'; then
                         echo "❌ El servicio web no se levantó correctamente. Abortando."
                         docker-compose -p pipeline-test logs web
                         exit 1
