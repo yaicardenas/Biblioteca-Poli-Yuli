@@ -5,13 +5,19 @@ pipeline {
         stage('Preparar entorno limpio') {
             steps {
                 sh '''
-                    echo 🧯 Deteniendo contenedores de proyectos anteriores...
-                    # Usar 'down' es más limpio para detener y eliminar la red del proyecto
-                    docker-compose -p pipeline-test down --remove-orphans || true
-                    docker-compose -p biblioteca-poli down --remove-orphans || true
+                    echo 🧯 Deteniendo solo los contenedores de app y db...
 
-                    echo 🗑 Eliminando recursos no utilizados...
-                    docker system prune -af || true
+                    docker stop flask-app mysql-db || true
+                    docker rm flask-app mysql-db || true
+
+                    echo 🧹 Limpiando red app-net si no se usa...
+                    docker network rm app-net || true
+
+                    echo 📦 Eliminando imágenes dangling (sin afectar Jenkins)...
+                    docker image prune -f || true
+
+                    echo 🧹 Limpiando volúmenes huérfanos (solo si estás segura)...
+                    docker volume prune -f || true
                 '''
             }
         }
