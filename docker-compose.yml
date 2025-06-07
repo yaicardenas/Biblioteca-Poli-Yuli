@@ -20,8 +20,6 @@ services:
       - "5000:5000"
     depends_on:
       - db
-    volumes:
-      - ./app:/app
     networks:
       - pipeline_net 
 
