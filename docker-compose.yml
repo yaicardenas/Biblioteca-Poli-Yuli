@@ -9,7 +9,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./mysql-init/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./mysql-init:/docker-entrypoint-initdb.d:ro
     networks:
       - pipeline_net 
 
