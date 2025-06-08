@@ -10,7 +10,7 @@ def obtener_conexion():
             return mysql.connector.connect(
                 host='mysql-db',
                 user='root',
-                password='root',
+                password='rootpassword',
                 database='biblioteca'
             )
         except Error as e:
