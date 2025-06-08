@@ -38,7 +38,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
-      - JAVA_OPTS=-Djetty.http.requestHeaderSize=16384 -Djetty.http.responseHeaderSize=16384
+      - JENKINS_OPTS=--httpRequestHeaderSize=16384
     networks:
       - pipeline_net  
 
