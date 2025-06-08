@@ -25,6 +25,7 @@ pipeline {
         stage('Ejecutar pruebas unitarias') {
             steps {
                 sh '''#!/bin/bash
+                    docker-compose -p pipeline-test build --no-cache
                     docker-compose -p pipeline-test up -d db web
 
                     until docker exec mysql-db mysqladmin ping -h "127.0.0.1" --silent; do
@@ -38,7 +39,7 @@ pipeline {
                         exit 1
                     fi
 
-                    docker exec -i web python -m unittest discover -s test -v > resultados_test.log 2>&1
+                    docker exec -w /app -i web python -m unittest discover -s test -v > resultados_test.log 2>&1
 
                     status=$?
 
