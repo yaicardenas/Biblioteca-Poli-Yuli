@@ -110,6 +110,26 @@ pipeline {
                 sh '''
                 echo "🚀 Desplegando en producción..."
                 docker-compose -p prod up -d --build db web
+
+                echo "⏳ Esperando a que la base de datos esté disponible..."
+                until docker exec mysql-db mysqladmin ping -h "127.0.0.1" --silent; do
+                    echo "Esperando DB..."
+                    sleep 5
+                done
+
+                echo "📄 Copiando script de inicialización a MySQL..."
+                docker cp mysql-init/init.sql mysql-db:/init.sql
+                if [ $? -ne 0 ]; then
+                    echo "❌ Error al copiar init.sql"
+                    exit 1
+                fi
+
+                echo "🛠 Ejecutando script de inicialización..."
+                if ! docker exec mysql-db bash -c 'mysql -uroot -prootpassword biblioteca < /init.sql'; then
+                    echo "❌ Error al cargar init.sql"
+                    exit 1
+                fi
+
                 '''
             }
         }
