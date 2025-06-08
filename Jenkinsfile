@@ -47,7 +47,7 @@ pipeline {
                 done
 
                 echo "📄 Copiando script de inicialización a MySQL..."
-                docker cp init.sql mysql-db:/init.sql
+                docker cp mysql-init/init.sql mysql-db:/init.sql
                 if [ $? -ne 0 ]; then
                     echo "❌ Error al copiar init.sql"
                     exit 1
