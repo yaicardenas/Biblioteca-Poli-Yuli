@@ -16,7 +16,7 @@ services:
   web:
     build:
       context: .              
-      dockerfile: app/Dockerfile
+      dockerfile: Dockerfile
     container_name: web
     ports:
       - "5000:5000"
