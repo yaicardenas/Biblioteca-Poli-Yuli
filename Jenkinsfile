@@ -5,21 +5,21 @@ pipeline {
         stage('Preparar entorno limpio') {
             steps {
                 sh '''#!/bin/bash
-                    echo 🧯 Deteniendo contenedores anteriores...
+                    echo "🧯 Deteniendo contenedores anteriores..."
                     docker stop web mysql-db || true
 
-                    echo 🗑 Eliminando contenedores anteriores (web y MySQL) con volúmenes...
+                    echo "🗑 Eliminando contenedores anteriores con volúmenes..."
                     docker rm -v web mysql-db || true
 
-                    echo 🔧 Eliminando redes antiguas específicas...
+                    echo "🔧 Eliminando redes antiguas específicas..."
                     docker network rm pipeline_net || true
                     docker network rm pipeline-test_default || true
                     docker network rm pipeline-test_pipeline_net || true
 
-                    echo 🧹 Limpiando volúmenes huérfanos...
+                    echo "🧹 Limpiando volúmenes huérfanos..."
                     docker volume prune -f || true
 
-                    echo 🔄 Prune de redes no usadas...
+                    echo "🔄 Prune de redes no usadas..."
                     docker network prune -f || true
                 '''
             }
