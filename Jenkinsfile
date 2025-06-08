@@ -38,6 +38,12 @@ pipeline {
                         sleep 5
                     done
 
+                    echo "📄 Copiando script de inicialización a MySQL..."
+                    docker cp init.sql mysql-db:/init.sql
+
+                    echo "🛠 Ejecutando script de inicialización..."
+                    docker exec mysql-db bash -c 'mysql -uroot -proot biblioteca < /init.sql'
+
                     if ! docker-compose -p pipeline-test ps web | grep 'Up'; then
                         echo "Web no arrancó"
                         docker-compose -p pipeline-test logs web
@@ -59,7 +65,6 @@ pipeline {
                 '''
             }
         }
-
 
         stage('Limpiar entorno Docker') {
             when {
