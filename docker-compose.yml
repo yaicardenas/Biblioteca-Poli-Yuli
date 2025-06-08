@@ -9,7 +9,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./mysql-init/init.sql:/docker-entrypoint-initdb.d/init.sql
       - mysql-data:/var/lib/mysql
     networks:
       - pipeline_net 
@@ -43,7 +43,7 @@ services:
     networks:
       - pipeline_net
 
-  
+
 volumes:
   jenkins_home:
   mysql-data:
