@@ -38,10 +38,12 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
-      - JAVA_TOOL_OPTIONS=-Djetty.http.requestHeaderSize=16384 -Djetty.http.responseHeaderSize=16384
+    command: >
+      bash -c "JAVA_OPTS='-Djetty.http.requestHeaderSize=32768 -Djetty.http.responseHeaderSize=32768' /usr/bin/tini -- /usr/local/bin/jenkins.sh"
     networks:
       - pipeline_net
 
+  
 volumes:
   jenkins_home:
   mysql-data:
