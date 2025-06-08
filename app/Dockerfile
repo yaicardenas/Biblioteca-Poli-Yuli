@@ -1,9 +1,10 @@
+# Dockerfile ubicado en app/
 FROM python:3.11-slim
 
 WORKDIR /app
 
-# Copia TODO lo necesario, incluyendo test/
-COPY . .
+COPY app/ .          
+COPY app/test/ test/ 
 
 RUN pip install -r requirements.txt
 

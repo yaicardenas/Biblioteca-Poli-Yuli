@@ -12,9 +12,11 @@ services:
       - ./mysql-init:/docker-entrypoint-initdb.d
     networks:
       - pipeline_net 
+
   web:
     build:
-      context: ./app
+      context: .              
+      dockerfile: app/Dockerfile
     container_name: web
     ports:
       - "5000:5000"
