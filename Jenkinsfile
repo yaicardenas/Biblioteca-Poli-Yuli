@@ -18,6 +18,8 @@ pipeline {
 
                     echo "🧹 Limpiando volúmenes huérfanos..."
                     docker volume prune -f || true
+                    docker volume rm pipeline-test_mysql-data || true
+
 
                     echo "🔄 Prune de redes no usadas..."
                     docker network prune -f || true
