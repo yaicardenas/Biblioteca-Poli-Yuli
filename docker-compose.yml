@@ -40,7 +40,7 @@ services:
       - DOCKER_HOST=unix:///var/run/docker.sock
       - JAVA_TOOL_OPTIONS=-Djetty.http.requestHeaderSize=16384 -Djetty.http.responseHeaderSize=16384
     networks:
-      - pipeline_net  
+      - pipeline_net
 
 volumes:
   jenkins_home:
