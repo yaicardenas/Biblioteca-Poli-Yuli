@@ -38,7 +38,8 @@ pipeline {
                         exit 1
                     fi
 
-                    docker exec -it web python -m unittest discover -s test -v > resultados_test.log 2>&1
+                    docker exec -i web python -m unittest discover -s test -v > resultados_test.log 2>&1
+
                     status=$?
 
                     if [ $status -ne 0 ]; then
