@@ -54,7 +54,7 @@ pipeline {
                 fi
 
                 echo "🛠 Ejecutando script de inicialización..."
-                if ! docker exec mysql-db bash -c 'mysql -uroot -proot biblioteca < /init.sql'; then
+                if ! docker exec mysql-db bash -c 'mysql -uroot -prootpassword biblioteca < /init.sql'; then
                     echo "❌ Error al cargar init.sql"
                     exit 1
                 fi
