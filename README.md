@@ -7,10 +7,13 @@ Proyecto Flask + MySQL con integración continua usando Jenkins y Docker.
 ## 🧱 Estructura del Proyecto
 <pre> 
 Biblioteca-Poli/
+├── .github                      # Aplicación Flask
+│   └──workflows/  
+│       └── ci.yml              # Workflow de CI/CD para GitHub Actions
 ├── app/                        # Aplicación Flask
 │   ├── static/                # Archivos estáticos (CSS, JS)
 │   │   └── css/
-│   │       ├── estilos.css
+│   │       └── estilos.css
 │   ├── templates/             # Plantillas HTML
 │   ├── app.py                 # Entrada principal
 │   ├── main.py                # Lógica principal
