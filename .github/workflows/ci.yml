@@ -80,10 +80,9 @@ jobs:
   # 4️⃣ MERGE development → main (si push vino de feature o de dev)
   #######################################################################
   auto-merge-to-main:
-    name: 🚀 Merge development → main
+    name: Merge development → main
     needs:
       - build-test
-      - auto-merge-to-development  # este job se ignora si no se ejecutó
     runs-on: ubuntu-latest
     if: ${{ needs.build-test.result == 'success' && (startsWith(github.ref, 'refs/heads/feature/') || github.ref == 'refs/heads/development') }}
     steps:
