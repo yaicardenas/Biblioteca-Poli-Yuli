@@ -2,7 +2,7 @@ name: CI Biblioteca Poli
 
 on:
   push:
-    branches: [development, 'feature/**']       # <— se bloquean pushes directos a main con branch protection
+    branches: [main, development, 'feature/**']
   pull_request:
     branches: [development]
 
@@ -13,16 +13,27 @@ jobs:
   build-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with: {python-version: '3.9'}
-      - run: pip install -r app/requirements.txt
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: pip install -r app/requirements.txt
+
       - name: Run unit tests
         run: |
           set -o pipefail
           PYTHONPATH=$PWD/app python -m unittest discover -s app/test -v | tee resultados_test.log
-      - uses: actions/upload-artifact@v4
-        with: {name: resultados_test, path: resultados_test.log}
+
+      - name: Upload test log
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultados_test
+          path: resultados_test.log
 
   ########################################################################
   # 2) NOTIFICACIÓN (SIEMPRE)
@@ -32,17 +43,20 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
-      - uses: 8398a7/action-slack@v3
-        with: {status: ${{ needs.build-test.result }}}
-        env: {SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}}
+      - name: Slack Notification
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ needs.build-test.result }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   ########################################################################
-  # 3) MERGE feature/* → development  (solo tests OK)
+  # 3) MERGE FEATURE → DEVELOPMENT (si las pruebas pasan)
   ########################################################################
   auto-merge-to-development:
     needs: build-test
     runs-on: ubuntu-latest
-    if: needs.build-test.result == 'success' && startsWith(github.ref, 'refs/heads/feature/')
+    if: ${{ needs.build-test.result == 'success' && startsWith(github.ref, 'refs/heads/feature/') }}
     steps:
       - name: Merge feature → development
         run: |
@@ -52,22 +66,19 @@ jobs:
           git clone https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }} repo
           cd repo
 
-          SRC="${GITHUB_REF#refs/heads/}"
+          SOURCE_BRANCH="${GITHUB_REF#refs/heads/}"
           git fetch origin
           git checkout development
-          git merge --no-ff origin/$SRC -m "Merge automático $SRC → development"
+          git merge --no-ff origin/$SOURCE_BRANCH -m "Merge automático $SOURCE_BRANCH → development"
           git push origin development
 
   ########################################################################
-  # 4) MERGE development → main  (tests OK y ref = feature/*  ó development)
+  # 4) MERGE DEVELOPMENT → MAIN (solo si las pruebas pasan y se trabaja desde development o main)
   ########################################################################
   auto-merge-to-main:
-    # Depende tanto del test como (si existió) del merge previo
-    needs: [build-test, auto-merge-to-development]
+    needs: build-test
     runs-on: ubuntu-latest
-    if: needs.build-test.result == 'success' &&
-      ( github.ref == 'refs/heads/development' ||
-      startsWith(github.ref, 'refs/heads/feature/') )
+    if: ${{ needs.build-test.result == 'success' && (github.ref == 'refs/heads/development' || github.ref == 'refs/heads/main') }}
     steps:
       - name: Merge development → main
         run: |
