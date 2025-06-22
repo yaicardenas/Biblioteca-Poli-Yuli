@@ -26,7 +26,8 @@ jobs:
 
       - name: Run unit tests
         run: |
-          PYTHONPATH=. python -m unittest discover -s app/test -v | tee resultados_test.log
+          set -o pipefail
+          PYTHONPATH=$PWD/app python -m unittest discover -s app/test -v | tee resultados_test.log
 
       - name: Upload test log
         uses: actions/upload-artifact@v4
