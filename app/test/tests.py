@@ -20,7 +20,7 @@ class TestBibliotecaApp(unittest.TestCase):
     def test_inicio_ruta(self, mock_conexion):
         # Mockea cursor y fetchall()
         mock_cursor = MagicMock()
-        mock_cursor.fetchall.return_value = [("Libro 1", "Autor 1", "Categoría", 3)]
+        mock_cursor.fetchall.return_value = [("ID", "Libro 1", "Autor 1", "Categoría", 3)]
         mock_conexion.return_value.cursor.return_value = mock_cursor
 
         response = self.app.get('/')
