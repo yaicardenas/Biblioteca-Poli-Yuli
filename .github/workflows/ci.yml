@@ -51,14 +51,14 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   ########################################################################
-  # 3) MERGE FEATURE -> DEVELOPMENT (solo si tests = success)
+  # 3) MERGE FEATURE → DEVELOPMENT (si las pruebas pasan)
   ########################################################################
   auto-merge-to-development:
     needs: build-test
     runs-on: ubuntu-latest
-    if: needs.build-test.result == 'success' && startsWith(github.ref, 'refs/heads/feature/')
+    if: ${{ needs.build-test.result == 'success' && startsWith(github.ref, 'refs/heads/feature/') }}
     steps:
-      - name: Merge to development
+      - name: Merge feature → development
         run: |
           git config --global user.email "ci@github.com"
           git config --global user.name  "GitHub Action Bot"
@@ -73,12 +73,12 @@ jobs:
           git push origin development
 
   ########################################################################
-  # 4) MERGE DEVELOPMENT -> MAIN (solo si tests = success y rama = dev o main)
+  # 4) MERGE DEVELOPMENT → MAIN (solo si las pruebas pasan y se trabaja desde development o main)
   ########################################################################
   auto-merge-to-main:
     needs: build-test
     runs-on: ubuntu-latest
-    if: needs.build-test.result == 'success' && (github.ref == 'refs/heads/development' || github.ref == 'refs/heads/main')
+    if: ${{ needs.build-test.result == 'success' && (github.ref == 'refs/heads/development' || github.ref == 'refs/heads/main') }}
     steps:
       - name: Merge development → main
         run: |
