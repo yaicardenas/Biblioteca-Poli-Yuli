@@ -7,9 +7,7 @@ on:
     branches: [development]
 
 jobs:
-  ########################################################################
-  # 1) BUILD + TEST
-  ########################################################################
+
   build-test:
     runs-on: ubuntu-latest
     steps:
@@ -35,9 +33,6 @@ jobs:
           name: resultados_test
           path: resultados_test.log
 
-  ########################################################################
-  # 2) NOTIFICACIÓN (SIEMPRE)
-  ########################################################################
   notify:
     needs: build-test
     runs-on: ubuntu-latest
@@ -50,9 +45,6 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  ########################################################################
-  # 3) MERGE FEATURE → DEVELOPMENT
-  ########################################################################
   auto-merge-to-development:
     needs: build-test
     runs-on: ubuntu-latest
@@ -70,13 +62,11 @@ jobs:
           git merge --no-ff origin/$SOURCE_BRANCH -m "Merge automático $SOURCE_BRANCH → development"
           git push origin development
 
-  ########################################################################
-  # 4) MERGE DEVELOPMENT → MAIN SI EL PUSH FUE A FEATURE/*
-  ########################################################################
-  auto-merge-to-main-from-feature:
-    needs: auto-merge-to-development
+  auto-merge-to-main:
+    needs: build-test
     runs-on: ubuntu-latest
-    if: ${{ startsWith(github.ref, 'refs/heads/feature/') }}
+    if: ${{ needs.build-test.result == 'success' &&
+      (startsWith(github.ref, 'refs/heads/feature/') || github.ref == 'refs/heads/development') }}
     steps:
       - name: Merge development → main
         run: |
@@ -86,5 +76,6 @@ jobs:
           cd repo
           git fetch origin
           git checkout main
-          git merge --no-ff origin/development -m "Merge automático development → main desde feature"
+          git merge --no-ff origin/development -m "Merge automático development → main"
           git push origin main
+  
