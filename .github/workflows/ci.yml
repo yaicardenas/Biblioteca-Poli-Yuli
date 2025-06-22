@@ -26,10 +26,11 @@ jobs:
           python -m unittest discover -s test -v | tee resultados_test.log
 
       - name: Upload test log
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: resultados_test
           path: resultados_test.log
+
 
   notify:
     needs: build-test
