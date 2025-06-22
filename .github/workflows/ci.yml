@@ -19,11 +19,11 @@ jobs:
           python-version: '3.9'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r app/requirements.txt
 
       - name: Run unit tests
         run: |
-          python -m unittest discover -s test -v | tee resultados_test.log
+          python -m unittest discover -s app/test -v | tee resultados_test.log
 
       - name: Upload test log
         uses: actions/upload-artifact@v4
