@@ -31,7 +31,6 @@ jobs:
           name: resultados_test
           path: resultados_test.log
 
-
   notify:
     needs: build-test
     runs-on: ubuntu-latest
