@@ -76,9 +76,8 @@ jobs:
   auto-merge-to-main:
     needs: [build-test, auto-merge-to-development]   # ⬅ orden garantizado
     runs-on: ubuntu-latest
-    if: ${{ needs.build-test.result == 'success' &&
-      ( github.ref == 'refs/heads/development' ||
-      startsWith(github.ref, 'refs/heads/feature/') ) }}
+    if: ${{ needs.build-test.result == 'success' && (startsWith(github.ref, 'refs/heads/feature/') || github.ref == 'refs/heads/development') }}
+
     steps:
       - name: Merge development → main
         run: |
