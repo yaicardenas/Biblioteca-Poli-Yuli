@@ -10,25 +10,22 @@ on:
 
 jobs:
 
-  #######################################################################
-  # 1️⃣ BUILD + TEST
-  #######################################################################
   build-test:
-    name: 🧪 Build & Test
+    name:  Build & Test
     runs-on: ubuntu-latest
     steps:
-      - name: 📥 Checkout
+      - name:  Checkout
         uses: actions/checkout@v3
 
-      - name: 🐍 Setup Python
+      - name:  Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
 
-      - name: 📦 Install dependencies
+      - name:  Install dependencies
         run: pip install -r app/requirements.txt
 
-      - name: 🚀 Run unit tests
+      - name:  Run unit tests
         run: |
           set -o pipefail
           PYTHONPATH=$PWD/app python -m unittest discover -s app/test -v | tee resultados_test.log
@@ -39,27 +36,22 @@ jobs:
           name: resultados_test
           path: resultados_test.log
 
-  #######################################################################
-  # 2️⃣ NOTIFICACIÓN A SLACK (Siempre)
-  #######################################################################
   notify:
-    name: 📣 Notify Slack
+    name:  Notify Slack
     needs: build-test
     runs-on: ubuntu-latest
     if: always()
     steps:
-      - name: 🔔 Slack Notification
+      - name:  Slack Notification
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ needs.build-test.result }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  #######################################################################
-  # 3️⃣ MERGE feature/* → development (solo si tests OK)
-  #######################################################################
+
   auto-merge-to-development:
-    name: 🔄 Merge feature → development
+    name:  Merge feature → development
     needs: build-test
     runs-on: ubuntu-latest
     if: ${{ needs.build-test.result == 'success' && startsWith(github.ref, 'refs/heads/feature/') }}
@@ -76,9 +68,6 @@ jobs:
           git merge --no-ff origin/$SRC -m "Merge automático $SRC → development"
           git push origin development
 
-  #######################################################################
-  # 4️⃣ MERGE development → main (si push vino de feature o de dev)
-  #######################################################################
   auto-merge-to-main:
     name: Merge development → main
     needs:
