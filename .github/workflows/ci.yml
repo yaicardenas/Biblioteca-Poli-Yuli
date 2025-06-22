@@ -51,7 +51,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   ########################################################################
-  # 3) MERGE FEATURE → DEVELOPMENT (si las pruebas pasan)
+  # 3) MERGE FEATURE → DEVELOPMENT
   ########################################################################
   auto-merge-to-development:
     needs: build-test
@@ -62,10 +62,8 @@ jobs:
         run: |
           git config --global user.email "ci@github.com"
           git config --global user.name  "GitHub Action Bot"
-
           git clone https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }} repo
           cd repo
-
           SOURCE_BRANCH="${GITHUB_REF#refs/heads/}"
           git fetch origin
           git checkout development
@@ -73,22 +71,20 @@ jobs:
           git push origin development
 
   ########################################################################
-  # 4) MERGE DEVELOPMENT → MAIN (solo si las pruebas pasan y se trabaja desde development o main)
+  # 4) MERGE DEVELOPMENT → MAIN SI EL PUSH FUE A FEATURE/*
   ########################################################################
-  auto-merge-to-main:
-    needs: build-test
+  auto-merge-to-main-from-feature:
+    needs: auto-merge-to-development
     runs-on: ubuntu-latest
-    if: ${{ needs.build-test.result == 'success' && (github.ref == 'refs/heads/development' || github.ref == 'refs/heads/main') }}
+    if: ${{ startsWith(github.ref, 'refs/heads/feature/') }}
     steps:
       - name: Merge development → main
         run: |
           git config --global user.email "ci@github.com"
           git config --global user.name  "GitHub Action Bot"
-
           git clone https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }} repo
           cd repo
-
           git fetch origin
           git checkout main
-          git merge --no-ff origin/development -m "Merge automático development → main [CI]"
+          git merge --no-ff origin/development -m "Merge automático development → main desde feature"
           git push origin main
