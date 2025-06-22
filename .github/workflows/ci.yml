@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - development
-      - 'feature/**'   # push directo a main bloqueado con regla de protección
+      - 'feature/**'   # Push directo a main está bloqueado con reglas
   pull_request:
     branches: [development]
 
@@ -38,7 +38,7 @@ jobs:
           path: resultados_test.log
 
   ########################################################################
-  # 2) NOTIFICACIÓN  (siempre, éxito o fallo)
+  # 2) NOTIFICACIÓN (éxito o fallo)
   ########################################################################
   notify:
     needs: build-test
@@ -53,7 +53,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   ########################################################################
-  # 3) MERGE feature/* → development  (solo si tests OK)
+  # 3) MERGE feature/* → development (solo si pruebas OK)
   ########################################################################
   auto-merge-to-development:
     needs: build-test
@@ -75,14 +75,13 @@ jobs:
           git push origin development
 
   ########################################################################
-  # 4) MERGE development → main (tests OK y el push vino de dev o feature/*)
+  # 4) MERGE development → main (si push fue a dev o a feature/*)
   ########################################################################
   auto-merge-to-main:
-    needs:
-      - build-test
-      - auto-merge-to-development   # se resuelve instantáneamente si no se ejecutó
+    needs: [build-test]
     runs-on: ubuntu-latest
-    if: ${{ needs.build-test.result == 'success' && ( startsWith(github.ref, 'refs/heads/feature/') || github.ref == 'refs/heads/development' ) }}
+    if: ${{ needs.build-test.result == 'success' &&
+      (startsWith(github.ref, 'refs/heads/feature/') || github.ref == 'refs/heads/development') }}
     steps:
       - name: Merge development → main
         run: |
