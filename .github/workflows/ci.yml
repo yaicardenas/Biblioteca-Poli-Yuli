@@ -68,6 +68,7 @@ jobs:
           git merge --no-ff origin/$SRC -m "Merge automático $SRC → development"
           git push origin development
 
+
   auto-merge-to-main:
     name: Merge development → main
     needs:
