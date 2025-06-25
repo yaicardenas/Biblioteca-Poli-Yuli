@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - development
-      - 'feature/**'   # 👈 main está protegido, no se permite push directo
+      - 'feature/**'
   pull_request:
     branches: [development]
 
@@ -25,10 +25,11 @@ jobs:
       - name:  Install dependencies
         run: pip install -r app/requirements.txt
 
-      - name:  Run unit tests
+      - name: Run unit tests
         run: |
           set -o pipefail
-          PYTHONPATH=$PWD/app python -m unittest discover -s app/test -v | tee resultados_test.log
+          PYTHONPATH=$PWD/app python -m unittest discover -s app/test -v 2>&1 | tee resultados_test.log
+      
 
       - name: 📤 Upload test log
         uses: actions/upload-artifact@v4
